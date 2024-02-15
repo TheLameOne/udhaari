@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/PersonListView.dart';
+import 'package:udhaari/screens/AddPerson.dart';
 import 'package:udhaari/screens/ViewPerson.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,9 +24,11 @@ class _HomePageState extends State<HomePage> {
               },
               child: Icon(Icons.search)),
           InkWell(
-              onTap: () {
-                // Navigate to Add Person Screen
-              },
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddPerson(),
+                  )),
               child: Icon(Icons.person_add_alt_1))
         ],
         title: Text("Udhaari"),
