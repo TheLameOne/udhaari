@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udhaari/screens/UdhaarDetails.dart';
 import 'package:udhaari/screens/tab_pages/HomePage.dart';
 import 'package:udhaari/utils/global.dart';
 
@@ -15,7 +16,7 @@ class _SplashPageState extends State<SplashPage> {
       case 0:
         return HomePage();
       case 1:
-        return HomePage();
+        return UdhaarDetails();
       case 2:
         return HomePage();
       case 3:
@@ -33,33 +34,30 @@ class _SplashPageState extends State<SplashPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          _getBottomBarItem(index: 0, icontab: Icons.home, text: "Home"),
-          _getBottomBarItem(
-              index: 1, icontab: Icons.groups_3_rounded, text: "Friends"),
-          _getBottomBarItem(
-              index: 2, icontab: Icons.bar_chart_rounded, text: "Bookings"),
-          _getBottomBarItem(index: 3, icontab: Icons.person, text: "Account"),
+          _getBottomBarItem(index: 0, icontab: Icons.home),
+          _getBottomBarItem(index: 1, icontab: Icons.groups_3_rounded),
+          _getBottomBarItem(index: 2, icontab: Icons.bar_chart_rounded),
+          _getBottomBarItem(index: 3, icontab: Icons.person),
         ],
       ),
     );
   }
 
-  _getBottomBarItem(
-      {required int index, required IconData icontab, required String text}) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          currentPage = index;
-        });
-      },
-      child: Container(
-        alignment: Alignment.center,
-        height: 60,
-        margin: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
+  _getBottomBarItem({required int index, required IconData icontab}) {
+    return Container(
+      alignment: Alignment.center,
+      height: 40,
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          InkWell(
+            onTap: () {
+              setState(() {
+                currentPage = index;
+              });
+            },
+            child: Container(
               padding: const EdgeInsets.all(0),
               decoration: BoxDecoration(
                 color: currentPage == index ? Colors.white : Colors.transparent,
@@ -76,22 +74,14 @@ class _SplashPageState extends State<SplashPage> {
                               currentPage == index ? Colors.amber : Colors.grey,
                           size: (28)),
                       SizedBox(height: 2),
-                      Text(
-                        text,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color:
-                              currentPage == index ? Colors.amber : Colors.grey,
-                        ),
-                      )
                     ],
                   ),
                   // (currentPage == index) ? Container(margin:const EdgeInsets.only(left: 8) ,child: CustomText.smalltext(text)) : const Text('')
                 ],
               )),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

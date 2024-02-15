@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/PersonListView.dart';
 import 'package:udhaari/screens/AddPerson.dart';
+import 'package:udhaari/screens/AddUdhaar.dart';
 import 'package:udhaari/screens/ViewPerson.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,7 +37,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: SizedBox(
         width: size.width * 0.4,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddUdhaar())),
           foregroundColor: Colors.white,
           backgroundColor: Colors.cyan,
           child: Row(
