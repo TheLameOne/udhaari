@@ -81,7 +81,11 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                       builder: (context) => ViewPerson(),
                     )),
-                child: PersonListView()),
+                child: PersonListView(
+                  name: "Harsh",
+                  address: "Meerut",
+                  netamount: 200,
+                )),
             // Floating Button in bottom right corner with text "Add Exprense"
           ]),
         ),

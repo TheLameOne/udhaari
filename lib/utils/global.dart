@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 var currentPage = 0;
-
+var phoneNumber = "8218124336";
 void errorToast(String message, BuildContext context) {
   var fToast = FToast();
   fToast.init(context);

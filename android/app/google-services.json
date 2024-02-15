@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "737832451258",
+    "project_id": "udhaari-af8aa",
+    "storage_bucket": "udhaari-af8aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737832451258:android:8eacd12850df0d8f1b9683",
+        "android_client_info": {
+          "package_name": "com.example.udhaari"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN2UzZp2NibeNrLNS7tD2lABs924DnYIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

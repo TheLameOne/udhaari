@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udhaari/screens/UdhaarDetails.dart';
+import 'package:udhaari/screens/tab_pages/ActivityPage.dart';
+import 'package:udhaari/screens/tab_pages/AllPersons.dart';
 import 'package:udhaari/screens/tab_pages/HomePage.dart';
 import 'package:udhaari/utils/global.dart';
 
@@ -16,9 +18,9 @@ class _SplashPageState extends State<SplashPage> {
       case 0:
         return HomePage();
       case 1:
-        return UdhaarDetails();
+        return AllPersonPage();
       case 2:
-        return HomePage();
+        return ActivityPage();
       case 3:
         return HomePage();
       // case 4:
