@@ -85,6 +85,7 @@ class _HomePageState extends State<HomePage> {
                   name: "Harsh",
                   address: "Meerut",
                   netamount: 200,
+                  imageUrl: "",
                 )),
             // Floating Button in bottom right corner with text "Add Exprense"
           ]),

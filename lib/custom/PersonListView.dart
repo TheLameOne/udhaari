@@ -6,9 +6,13 @@ class PersonListView extends StatelessWidget {
   String name;
   String address;
   int netamount;
+  String imageUrl;
 
   PersonListView(
-      {required this.name, required this.address, required this.netamount});
+      {required this.name,
+      required this.address,
+      required this.netamount,
+      required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +29,10 @@ class PersonListView extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: NetworkImage(
-                      'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg'),
+                  image: (imageUrl.isNotEmpty)
+                      ? NetworkImage(imageUrl)
+                      : AssetImage('assets/images/profilepic.png')
+                          as ImageProvider,
                 ),
               ),
             ),

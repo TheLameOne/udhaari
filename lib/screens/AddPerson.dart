@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udhaari/utils/global.dart';
 
 class AddPerson extends StatefulWidget {
@@ -17,8 +21,11 @@ class _AddPersonState extends State<AddPerson> {
 
   var name = '';
   var address = '';
-  var photo = '';
+  var photoPath = '';
   var details = '';
+  String imageURL = '';
+  late Reference imagepath;
+  late XFile filepath;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,14 @@ class _AddPersonState extends State<AddPerson> {
       appBar: AppBar(
         actions: [
           InkWell(
-              onTap: () {
+              onTap: () async {
+                try {
+                  await imagepath.putFile(File(filepath.path));
+                  print(filepath.path);
+                  imageURL = await imagepath.getDownloadURL();
+                } catch (error) {
+                  print(error.toString());
+                }
                 FirebaseFirestore.instance
                     .collection('users')
                     .doc(phoneNumber)
@@ -37,9 +51,12 @@ class _AddPersonState extends State<AddPerson> {
                       'name': name,
                       'address': address,
                       'netamount': 0,
+                      'imageURL': imageURL,
                     })
                     .then((value) => print("Data Added"))
                     .catchError((error) => print("Data not Added"));
+                successToast("Person Added Successfully", context);
+                Navigator.pop(context);
               },
               child: Icon(Icons.check))
         ],
@@ -55,7 +72,7 @@ class _AddPersonState extends State<AddPerson> {
               },
               controller: nameController,
               decoration: InputDecoration(
-                labelText: "Name*",
+                labelText: "Name",
                 hintText: "Enter the name of the person",
               ),
             ),
@@ -69,19 +86,28 @@ class _AddPersonState extends State<AddPerson> {
                   labelText: "Address",
                   hintText: "Enter the address of the person",
                 )),
-            TextField(
-              onChanged: (value) {
-                photo = value;
-              },
-              controller: photoController,
-              decoration: InputDecoration(
-                labelText: "Photo",
-                hintText: "Upload a photo of the person",
-              ),
-            ),
-            // Address
+            InkWell(
+                onTap: () async {
+                  ImagePicker imagePicker = ImagePicker();
+                  XFile? file =
+                      await imagePicker.pickImage(source: ImageSource.gallery);
 
-            // Photo
+                  if (file != null) {
+                    String id =
+                        DateTime.now().millisecondsSinceEpoch.toString();
+                    Reference referenceRoot = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages =
+                        referenceRoot.child(phoneNumber.toString());
+                    Reference referenceImageToUpload =
+                        referenceDirImages.child(id);
+                    imagepath = referenceImageToUpload;
+                    filepath = file;
+                  } else {
+                    errorToast("Please Choose the File", context);
+                  }
+                },
+                child: Icon(Icons.camera_alt_rounded)),
+
             TextField(
               onChanged: (value) {
                 details = value;

@@ -22,9 +22,11 @@ class AllPersonPage extends StatelessWidget {
                   children: [
                     for (int i = 0; i < snapshot.data!.size; i++)
                       PersonListView(
-                          name: snapshot.data?.docs[i]['name'],
-                          address: snapshot.data?.docs[i]['address'],
-                          netamount: snapshot.data?.docs[i]['netamount'])
+                        name: snapshot.data?.docs[i]['name'],
+                        address: snapshot.data?.docs[i]['address'],
+                        netamount: snapshot.data?.docs[i]['netamount'],
+                        imageUrl: snapshot.data?.docs[i]['imageURL'],
+                      )
                   ],
                 ),
               );
