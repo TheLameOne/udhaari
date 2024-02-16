@@ -1,8 +1,8 @@
-import 'dart:ffi';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/CustomTextField.dart';
-import 'package:udhaari/custom/CustomTextField.dart';
+import 'package:udhaari/utils/global.dart';
 
 class AddUdhaar extends StatefulWidget {
   const AddUdhaar({super.key});
@@ -16,14 +16,30 @@ class _AddUdhaarState extends State<AddUdhaar> {
   final amountFieldContoller = TextEditingController();
   final descriptionFieldContoller = TextEditingController();
 
+  DateTime selectedDate = DateTime.now();
+  var name = '';
+  var description = '';
+  var numberToText = '';
+
+  bool udhaar = false;
+  var amount = '';
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(DateTime.now().year - 100),
+        lastDate: DateTime(DateTime.now().year));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    var name = '';
-    var description = '';
-    var numberToText = '';
-    bool udhaar = false;
-    double amount = 0;
 
     return Scaffold(
       backgroundColor: Colors.white38,
@@ -32,8 +48,26 @@ class _AddUdhaarState extends State<AddUdhaar> {
         actions: [
           InkWell(
               onTap: () {
+                if (name.isEmpty) {
+                  print(name);
+                  errorToast("Please Select Name", context);
+                  return;
+                }
+                if (amount.isEmpty) {
+                  errorToast("Please Enter Amount", context);
+                  return;
+                }
+                if (description.isEmpty) {
+                  errorToast("Please Enter Description", context);
+                  return;
+                }
+                _addUdhaarToDatabase(name, amount, udhaar);
+                // _addToActivity(name, amount, description, udhaar, selectedDate);
+
                 // Submit form
                 // success toast
+                successToast("Added Successfully", context);
+                Navigator.pop(context);
               },
               child: Icon(Icons.check))
         ],
@@ -60,7 +94,8 @@ class _AddUdhaarState extends State<AddUdhaar> {
               controller: amountFieldContoller,
               prefixIcon: Icons.currency_rupee,
               onChanged: (value) {
-                amount = value as double;
+                amount = value!;
+                print(amount.toString());
               },
             ),
 
@@ -79,6 +114,10 @@ class _AddUdhaarState extends State<AddUdhaar> {
             // amount to text
 
             // red / green
+            InkWell(
+                onTap: () => _selectDate(context),
+                child: Icon(Icons.calendar_month)),
+
             Row(
               children: [
                 InkWell(
@@ -106,4 +145,25 @@ class _AddUdhaarState extends State<AddUdhaar> {
       ),
     );
   }
+}
+
+// void _addToActivity(String name, String amount, String description, bool udhaar,
+//     DateTime selectedDate) {}
+
+void _addUdhaarToDatabase(String name, String amount, bool udhaar) async {
+  var collection = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(phoneNumber)
+      .collection('persons')
+      .where("name", isEqualTo: name)
+      .get();
+  int netAmount = collection.docs[0].data()["netamount"];
+  int totalAmount = netAmount + int.parse(amount);
+
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(phoneNumber)
+      .collection('persons')
+      .doc(collection.docs[0].id)
+      .update({'netamount': totalAmount});
 }

@@ -7,14 +7,15 @@ void errorToast(String message, BuildContext context) {
   var fToast = FToast();
   fToast.init(context);
   fToast.showToast(
-      child: customizedLeadingIconWidget(message), gravity: ToastGravity.TOP);
+      child: customizedLeadingIconWidget(message),
+      gravity: ToastGravity.BOTTOM);
 }
 
 void successToast(String message, BuildContext context) {
   var fToast = FToast();
   fToast.init(context);
   fToast.showToast(
-      child: successIconWidget(message), gravity: ToastGravity.TOP);
+      child: successIconWidget(message), gravity: ToastGravity.BOTTOM);
 }
 
 String? requiredString(String value) {
