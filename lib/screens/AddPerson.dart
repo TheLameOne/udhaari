@@ -26,7 +26,7 @@ class _AddPersonState extends State<AddPerson> {
   var details = '';
   String imageURL = '';
   late Reference imagepath;
-  late XFile filepath;
+  XFile? filepath = null;
 
   @override
   Widget build(BuildContext context) {
@@ -34,36 +34,39 @@ class _AddPersonState extends State<AddPerson> {
       appBar: AppBar(
         actions: [
           InkWell(
-              onTap: () {
-                print(name);
-                print(address);
-                print(filepath.path);
+              onTap: () async {
+                if (name.isEmpty) {
+                  errorToast("Please Enter Name", context);
+                  return;
+                }
+                if (address.isEmpty) {
+                  errorToast("Please Enter Address", context);
+                  return;
+                }
+                try {
+                  await imagepath.putFile(File(filepath!.path));
+                  print(filepath!.path);
+                  imageURL = await imagepath.getDownloadURL();
+                } catch (error) {
+                  print(error.toString());
+                }
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(phoneNumber)
+                    .collection('persons')
+                    // .where('phoneNumber', isEqualTo: phoneNumber)
+                    .add({
+                      //Data added in the form of a dictionary into the document.
+                      'name': name,
+                      'address': address,
+                      'netamount': 0,
+                      'imageURL': imageURL,
+                    })
+                    .then((value) => print("Data Added"))
+                    .catchError((error) => print("Data not Added"));
+                successToast("Person Added Successfully", context);
+                Navigator.pop(context);
               },
-              // async {
-              //   try {
-              //     await imagepath.putFile(File(filepath.path));
-              //     print(filepath.path);
-              //     imageURL = await imagepath.getDownloadURL();
-              //   } catch (error) {
-              //     print(error.toString());
-              //   }
-              //   FirebaseFirestore.instance
-              //       .collection('users')
-              //       .doc(phoneNumber)
-              //       .collection('persons')
-              //       // .where('phoneNumber', isEqualTo: phoneNumber)
-              //       .add({
-              //         //Data added in the form of a dictionary into the document.
-              //         'name': name,
-              //         'address': address,
-              //         'netamount': 0,
-              //         'imageURL': imageURL,
-              //       })
-              //       .then((value) => print("Data Added"))
-              //       .catchError((error) => print("Data not Added"));
-              //   successToast("Person Added Successfully", context);
-              //   Navigator.pop(context);
-              // },
               child: Icon(Icons.check))
         ],
         title: Text("Add Person"),
@@ -131,3 +134,5 @@ class _AddPersonState extends State<AddPerson> {
     );
   }
 }
+
+void _validate(String name) {}
