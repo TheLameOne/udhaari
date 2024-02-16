@@ -1,73 +1,63 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final double width;
-  final String labelText;
-  final String hintText;
-  final double hintTextSize;
-  // final String initialValue;
-  final Function(String?)? onChanged;
-  final TextInputType textInputType;
-  final double padding;
-  final bool size;
-  final bool onRegPage;
+  final TextEditingController controller;
+  final String name;
+  final IconData prefixIcon;
   final bool obscureText;
-  final int minLine;
-  final int? maxLine;
-  final Color cursorColor;
-  final TextEditingController? controller;
+  final TextCapitalization textCapitalization;
+  final TextInputType inputType;
+  final Function(String?)? onChanged;
 
-  CustomTextField(
-      {required this.width,
-      required this.labelText,
-      required this.hintText,
-      this.hintTextSize = 12,
-      // required this.initialValue,
-      required this.onChanged,
-      this.textInputType = TextInputType.text,
-      this.padding = 0,
-      this.size = false,
-      this.onRegPage = false,
-      this.cursorColor = Colors.black,
-      this.maxLine = null,
-      this.minLine = 1,
-      this.obscureText = false,
-      this.controller});
+  const CustomTextField({
+    Key? key,
+    required this.onChanged,
+    required this.controller,
+    required this.name,
+    required this.prefixIcon,
+    this.obscureText = false,
+    this.textCapitalization = TextCapitalization.none,
+    required this.inputType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: Container(
-          width: width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Color.fromRGBO(255, 255, 255, 0.3),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      child: TextField(
+        onChanged: onChanged,
+        enabled: true,
+        controller: controller,
+        textCapitalization: textCapitalization,
+        maxLength: 32,
+        maxLines: 1,
+        obscureText: obscureText,
+        keyboardType: inputType,
+        textAlign: TextAlign.start,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+        decoration: InputDecoration(
+          prefixIcon: Icon(prefixIcon),
+          isDense: true,
+          labelText: name,
+          counterText: "",
+          labelStyle: const TextStyle(color: Colors.grey),
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: TextFormField(
-              controller: controller,
-              onChanged: onChanged,
-              obscureText: obscureText,
-              cursorColor: cursorColor,
-              minLines: minLine,
-              maxLines: maxLine,
-              keyboardType: textInputType,
-              // initialValue: initialValue,
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: hintText,
-                // labelText: labelText,
-                // labelStyle: TextStyle(fontSize: 16, color: Colors.white),
-                hintStyle: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
-        ));
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/CustomTextField.dart';
+import 'package:udhaari/custom/CustomTextField.dart';
 
 class AddUdhaar extends StatefulWidget {
   const AddUdhaar({super.key});
@@ -40,57 +41,40 @@ class _AddUdhaarState extends State<AddUdhaar> {
       body: Container(
         child: Column(
           children: [
+            CustomTextField(
+              inputType: TextInputType.name,
+              obscureText: false,
+              name: "Name",
+              controller: nameFieldContoller,
+              prefixIcon: Icons.person,
+              onChanged: (value) {
+                name = value!;
+              },
+            ),
             // person search drop down list
-            Row(
-              children: [
-                Icon(Icons.person),
-                //  text field for person search
-                CustomTextField(
-                  width: 256,
-                  hintText: "Person Name",
-                  // initialValue: "",
-                  labelText: "Person Name",
-                  onChanged: (value) {
-                    name = value!;
-                  },
-                  textInputType: TextInputType.name,
-                  controller: nameFieldContoller,
-                ),
-              ],
+
+            CustomTextField(
+              inputType: TextInputType.number,
+              obscureText: false,
+              name: "Amount",
+              controller: amountFieldContoller,
+              prefixIcon: Icons.currency_rupee,
+              onChanged: (value) {
+                amount = value as double;
+              },
             ),
-            // amount
-            Row(
-              children: [
-                Icon(Icons.currency_rupee_sharp),
-                CustomTextField(
-                  width: 256,
-                  hintText: "Amount",
-                  // initialValue: "",
-                  labelText: "Amount",
-                  onChanged: (value) {
-                    amount = value! as double;
-                  },
-                  textInputType: TextInputType.number,
-                  controller: amountFieldContoller,
-                ),
-              ],
-            ),
+
             // description
-            Row(
-              children: [
-                Icon(Icons.currency_rupee_sharp),
-                CustomTextField(
-                  width: 256,
-                  hintText: "Description",
-                  // initialValue: "",
-                  labelText: "Description",
-                  onChanged: (value) {
-                    description = value!;
-                  },
-                  textInputType: TextInputType.text,
-                  controller: descriptionFieldContoller,
-                ),
-              ],
+
+            CustomTextField(
+              inputType: TextInputType.text,
+              obscureText: false,
+              name: "Description",
+              controller: descriptionFieldContoller,
+              prefixIcon: Icons.description,
+              onChanged: (value) {
+                description = value!;
+              },
             ),
             // amount to text
 

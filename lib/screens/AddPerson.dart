@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:udhaari/custom/CustomTextField.dart';
 import 'package:udhaari/utils/global.dart';
 
 class AddPerson extends StatefulWidget {
@@ -33,31 +34,36 @@ class _AddPersonState extends State<AddPerson> {
       appBar: AppBar(
         actions: [
           InkWell(
-              onTap: () async {
-                try {
-                  await imagepath.putFile(File(filepath.path));
-                  print(filepath.path);
-                  imageURL = await imagepath.getDownloadURL();
-                } catch (error) {
-                  print(error.toString());
-                }
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(phoneNumber)
-                    .collection('persons')
-                    // .where('phoneNumber', isEqualTo: phoneNumber)
-                    .add({
-                      //Data added in the form of a dictionary into the document.
-                      'name': name,
-                      'address': address,
-                      'netamount': 0,
-                      'imageURL': imageURL,
-                    })
-                    .then((value) => print("Data Added"))
-                    .catchError((error) => print("Data not Added"));
-                successToast("Person Added Successfully", context);
-                Navigator.pop(context);
+              onTap: () {
+                print(name);
+                print(address);
+                print(filepath.path);
               },
+              // async {
+              //   try {
+              //     await imagepath.putFile(File(filepath.path));
+              //     print(filepath.path);
+              //     imageURL = await imagepath.getDownloadURL();
+              //   } catch (error) {
+              //     print(error.toString());
+              //   }
+              //   FirebaseFirestore.instance
+              //       .collection('users')
+              //       .doc(phoneNumber)
+              //       .collection('persons')
+              //       // .where('phoneNumber', isEqualTo: phoneNumber)
+              //       .add({
+              //         //Data added in the form of a dictionary into the document.
+              //         'name': name,
+              //         'address': address,
+              //         'netamount': 0,
+              //         'imageURL': imageURL,
+              //       })
+              //       .then((value) => print("Data Added"))
+              //       .catchError((error) => print("Data not Added"));
+              //   successToast("Person Added Successfully", context);
+              //   Navigator.pop(context);
+              // },
               child: Icon(Icons.check))
         ],
         title: Text("Add Person"),
@@ -66,26 +72,28 @@ class _AddPersonState extends State<AddPerson> {
         child: Column(
           children: [
             // Name*
-            TextField(
-              onChanged: (value) {
-                name = value;
-              },
+            CustomTextField(
+              inputType: TextInputType.name,
+              obscureText: false,
+              name: "Name",
               controller: nameController,
-              decoration: InputDecoration(
-                labelText: "Name",
-                hintText: "Enter the name of the person",
-              ),
+              prefixIcon: Icons.person,
+              onChanged: (value) {
+                name = value!;
+              },
             ),
             // Details
-            TextField(
-                controller: addressController,
-                onChanged: (value) {
-                  address = value;
-                },
-                decoration: InputDecoration(
-                  labelText: "Address",
-                  hintText: "Enter the address of the person",
-                )),
+            CustomTextField(
+              inputType: TextInputType.streetAddress,
+              obscureText: false,
+              name: "Address",
+              controller: addressController,
+              prefixIcon: Icons.home,
+              onChanged: (value) {
+                address = value!;
+              },
+            ),
+
             InkWell(
                 onTap: () async {
                   ImagePicker imagePicker = ImagePicker();
@@ -107,16 +115,15 @@ class _AddPersonState extends State<AddPerson> {
                   }
                 },
                 child: Icon(Icons.camera_alt_rounded)),
-
-            TextField(
-              onChanged: (value) {
-                details = value;
-              },
+            CustomTextField(
+              inputType: TextInputType.text,
+              obscureText: false,
+              name: "Details",
               controller: detailsController,
-              decoration: InputDecoration(
-                labelText: "Details",
-                hintText: "Enter the details of the person",
-              ),
+              prefixIcon: Icons.description,
+              onChanged: (value) {
+                details = value!;
+              },
             ),
           ],
         ),

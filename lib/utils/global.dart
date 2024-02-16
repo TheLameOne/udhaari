@@ -17,6 +17,18 @@ void successToast(String message, BuildContext context) {
       child: successIconWidget(message), gravity: ToastGravity.TOP);
 }
 
+String? requiredString(String value) {
+  if (value.isEmpty) return 'Required !!!';
+  return null;
+}
+
+String? validateName(String name) {
+  String? required = requiredString(name);
+  if (required != null) return required;
+  RegExp regex = RegExp(r'^[ a-zA-Z]*$');
+  return (!regex.hasMatch(name)) ? 'Valid Name!!' : null;
+}
+
 Widget customizedLeadingIconWidget(String message) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
