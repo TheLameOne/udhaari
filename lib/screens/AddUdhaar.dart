@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udhaari/custom/CustomTextField.dart';
 import 'package:udhaari/utils/global.dart';
 
@@ -15,6 +19,10 @@ class _AddUdhaarState extends State<AddUdhaar> {
   final nameFieldContoller = TextEditingController();
   final amountFieldContoller = TextEditingController();
   final descriptionFieldContoller = TextEditingController();
+  var photoPath = '';
+  String imageURL = '';
+  late Reference imagepath;
+  XFile? filepath = null;
 
   DateTime selectedDate = DateTime.now();
   var name = '';
@@ -28,13 +36,12 @@ class _AddUdhaarState extends State<AddUdhaar> {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(DateTime.now().year - 100),
-        lastDate: DateTime(DateTime.now().year));
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
+        firstDate: DateTime(1950),
+        lastDate: DateTime.now());
+
+    setState(() {
+      selectedDate = picked!;
+    });
   }
 
   @override
@@ -47,7 +54,7 @@ class _AddUdhaarState extends State<AddUdhaar> {
         title: Text("Add Udhaar"),
         actions: [
           InkWell(
-              onTap: () {
+              onTap: () async {
                 if (name.isEmpty) {
                   print(name);
                   errorToast("Please Select Name", context);
@@ -61,8 +68,16 @@ class _AddUdhaarState extends State<AddUdhaar> {
                   errorToast("Please Enter Description", context);
                   return;
                 }
-                _addUdhaarToDatabase(name, amount, udhaar);
-                // _addToActivity(name, amount, description, udhaar, selectedDate);
+                try {
+                  await imagepath.putFile(File(filepath!.path));
+                  print(filepath!.path);
+                  imageURL = await imagepath.getDownloadURL();
+                } catch (error) {
+                  print(error.toString());
+                }
+                _addUdhaarToDatabase(name, amount);
+                _addToActivity(
+                    name, amount, description, udhaar, selectedDate, imageURL);
 
                 // Submit form
                 // success toast
@@ -117,6 +132,27 @@ class _AddUdhaarState extends State<AddUdhaar> {
             InkWell(
                 onTap: () => _selectDate(context),
                 child: Icon(Icons.calendar_month)),
+            InkWell(
+              onTap: () async {
+                ImagePicker imagePicker = ImagePicker();
+                XFile? file =
+                    await imagePicker.pickImage(source: ImageSource.gallery);
+
+                if (file != null) {
+                  String id = DateTime.now().millisecondsSinceEpoch.toString();
+                  Reference referenceRoot = FirebaseStorage.instance.ref();
+                  Reference referenceDirImages =
+                      referenceRoot.child(phoneNumber.toString());
+                  Reference referenceImageToUpload =
+                      referenceDirImages.child(id);
+                  imagepath = referenceImageToUpload;
+                  filepath = file;
+                } else {
+                  errorToast("Please Choose the File", context);
+                }
+              },
+              child: Icon(Icons.camera),
+            ),
 
             Row(
               children: [
@@ -147,10 +183,23 @@ class _AddUdhaarState extends State<AddUdhaar> {
   }
 }
 
-// void _addToActivity(String name, String amount, String description, bool udhaar,
-//     DateTime selectedDate) {}
+void _addToActivity(String name, String amount, String description, bool udhaar,
+    DateTime selectedDate, String imageURL) async {
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(phoneNumber)
+      .collection('activity')
+      .add({
+    'personName': name,
+    'amount': int.parse(amount),
+    'udhaar': udhaar,
+    'date': selectedDate,
+    'description': description,
+    'imageURL': imageURL
+  });
+}
 
-void _addUdhaarToDatabase(String name, String amount, bool udhaar) async {
+void _addUdhaarToDatabase(String name, String amount) async {
   var collection = await FirebaseFirestore.instance
       .collection('users')
       .doc(phoneNumber)
