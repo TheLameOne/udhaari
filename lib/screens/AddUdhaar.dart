@@ -76,6 +76,7 @@ class _AddUdhaarState extends State<AddUdhaar> {
                   print(error.toString());
                 }
                 _addUdhaarToDatabase(name, amount);
+                _overallOwn(amount);
                 _addToActivity(
                     name, amount, description, udhaar, selectedDate, imageURL);
 
@@ -181,6 +182,13 @@ class _AddUdhaarState extends State<AddUdhaar> {
       ),
     );
   }
+}
+
+void _overallOwn(String amount) {
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(phoneNumber)
+      .update({'overallOwn': FieldValue.increment(int.parse(amount))});
 }
 
 void _addToActivity(String name, String amount, String description, bool udhaar,
