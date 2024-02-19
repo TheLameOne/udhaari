@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/PersonListView.dart';
 import 'package:udhaari/screens/AddPerson.dart';
@@ -12,85 +13,111 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double overall_own = 100;
+  final overallOwnStream =
+      FirebaseFirestore.instance.collection("users").snapshots();
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          InkWell(
-              onTap: () {
-                // Search Function
-              },
-              child: Icon(Icons.search)),
-          InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddPerson(),
-                  )),
-              child: Icon(Icons.person_add_alt_1))
-        ],
-        title: Text("Udhaari"),
-      ),
-      floatingActionButton: SizedBox(
-        width: size.width * 0.4,
-        child: FloatingActionButton(
-          onPressed: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddUdhaar())),
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.cyan,
-          child: Row(
-            children: [Icon(Icons.receipt_rounded), Text("Add expense")],
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(children: [
-            // Overall Own
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    // Navigate to Stats Screen
-                  },
-                  child: Row(
-                    children: [
-                      (overall_own > 0)
-                          ? Text("Overall, you are owned")
-                          : Text("Overall,you owe"),
-                      Text("₹" + overall_own.toStringAsFixed(0),
-                          style: TextStyle(
-                              color:
-                                  overall_own > 0 ? Colors.green : Colors.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-                Icon(Icons.tune_rounded)
-              ],
-            ),
-            // List view of persons
+        appBar: AppBar(
+          actions: [
+            InkWell(
+                onTap: () {
+                  // Search Function
+                },
+                child: Icon(Icons.search)),
             InkWell(
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ViewPerson(),
+                      builder: (context) => AddPerson(),
                     )),
-                child: PersonListView(
-                  name: "Harsh",
-                  address: "Meerut",
-                  netamount: 200,
-                  imageUrl: "",
-                )),
-            // Floating Button in bottom right corner with text "Add Exprense"
-          ]),
+                child: Icon(Icons.person_add_alt_1))
+          ],
+          title: Text("Udhaari"),
         ),
-      ),
-    );
+        floatingActionButton: SizedBox(
+          width: size.width * 0.4,
+          child: FloatingActionButton(
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddUdhaar())),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.cyan,
+            child: Row(
+              children: [Icon(Icons.receipt_rounded), Text("Add expense")],
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(children: [
+              // Overall Own
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                InkWell(
+                  onTap: () {
+                    // Navigate to Stats Screen
+                  },
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: overallOwnStream,
+                      builder: (BuildContext context, snapshot) {
+                        if (snapshot.hasData) {
+                          var overall_own =
+                              snapshot.data?.docs[0]['overallOwn'];
+                          print(overall_own);
+                          return Row(children: [
+                            (overall_own > 0)
+                                ? Text("Overall, you are owned")
+                                : Text("Overall,you owe"),
+                            Text("₹" + overall_own.toStringAsFixed(0),
+                                style: TextStyle(
+                                    color: overall_own > 0
+                                        ? Colors.green
+                                        : Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold)),
+                          ]);
+                        } else if (snapshot.hasError) {
+                          print("error 2");
+                          return Center(child: Text(snapshot.error.toString()));
+                        } else {
+                          print("Error 3");
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      }),
+                ),
+                Icon(Icons.tune_rounded),
+              ]),
+              InkWell(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewPerson(),
+                      )),
+                  child: PersonListView(
+                    name: "Harsh",
+                    address: "Meerut",
+                    netamount: 200,
+                    imageUrl: "",
+                  )),
+            ]),
+          ),
+          // List view of persons
+
+          // Floating Button in bottom right corner with text "Add Exprense"
+        ));
   }
+}
+
+_overall(double overall_own) async {
+  int overallOwn = 0;
+  var collection = FirebaseFirestore.instance.collection('users');
+  var querySnapshot = await collection.get();
+  for (var queryDocumentSnapshot in querySnapshot.docs) {
+    Map<String, dynamic> data = queryDocumentSnapshot.data();
+    overallOwn = data['overallOwn'];
+  }
+  return overallOwn as double;
 }
