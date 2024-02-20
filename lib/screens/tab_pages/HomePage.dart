@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
       .collection("users")
       .doc(phoneNumber)
       .collection('persons')
+      .orderBy('netamount', descending: true)
       .snapshots();
 
   @override
@@ -70,7 +71,6 @@ class _HomePageState extends State<HomePage> {
                         if (snapshot.hasData) {
                           var overall_own =
                               snapshot.data?.docs[0]['overallOwn'];
-                          print(overall_own);
                           return Row(children: [
                             (overall_own > 0)
                                 ? Text("Overall, you are owned")

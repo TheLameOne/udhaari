@@ -87,6 +87,7 @@ class _ViewPersonState extends State<ViewPerson> {
                         .doc(phoneNumber)
                         .collection('activity')
                         .where("personName", isEqualTo: widget.name)
+                        .orderBy('date', descending: true)
                         .snapshots(),
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.hasData) {
