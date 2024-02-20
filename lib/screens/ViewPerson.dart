@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/PersonActivity.dart';
 import 'package:udhaari/utils/global.dart';
+import '';
 
 class ViewPerson extends StatefulWidget {
   String name;
@@ -95,7 +96,7 @@ class _ViewPersonState extends State<ViewPerson> {
                             PersonActivity(
                                 description: snapshot.data?.docs[i]
                                     ['description'],
-                                date: snapshot.data?.docs[i]['personName'],
+                                date: snapshot.data?.docs[i]['date'].toDate(),
                                 amount: snapshot.data?.docs[i]['amount'],
                                 imageUrl: snapshot.data?.docs[i]['imageURL']),
                         ]);

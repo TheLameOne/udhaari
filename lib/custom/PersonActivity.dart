@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PersonActivity extends StatefulWidget {
   String description;
-  String date;
+  DateTime date;
   int amount;
   String imageUrl;
 
@@ -39,8 +39,8 @@ class _PersonActivityState extends State<PersonActivity> {
           children: [
             Column(
               children: [
-                // Text(months[widget.date.month]),
-                // Text(widget.date.day.toString())
+                Text(months[widget.date.month]),
+                Text(widget.date.day.toString())
               ],
             ),
             Text(widget.description),
