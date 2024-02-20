@@ -4,6 +4,7 @@ import 'package:udhaari/custom/PersonListView.dart';
 import 'package:udhaari/screens/AddPerson.dart';
 import 'package:udhaari/screens/AddUdhaar.dart';
 import 'package:udhaari/screens/ViewPerson.dart';
+import 'package:udhaari/utils/global.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeNamed = "HomeScreen";
@@ -15,6 +16,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final overallOwnStream =
       FirebaseFirestore.instance.collection("users").snapshots();
+  final personsStream = FirebaseFirestore.instance
+      .collection("users")
+      .doc(phoneNumber)
+      .collection('persons')
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -90,18 +96,45 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Icon(Icons.tune_rounded),
               ]),
-              InkWell(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ViewPerson(),
-                      )),
-                  child: PersonListView(
-                    name: "Harsh",
-                    address: "Meerut",
-                    netamount: 200,
-                    imageUrl: "",
-                  )),
+              StreamBuilder<QuerySnapshot>(
+                  stream: personsStream,
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          for (int i = 0; i < snapshot.data!.size; i++)
+                            InkWell(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewPerson(
+                                          name: snapshot.data?.docs[i]['name'],
+                                          address: snapshot.data?.docs[i]
+                                              ['address'],
+                                          netamount: snapshot.data?.docs[i]
+                                              ['netamount'],
+                                          imageUrl: snapshot.data?.docs[i]
+                                              ['imageURL']),
+                                    )),
+                                child: PersonListView(
+                                  name: snapshot.data?.docs[i]['name'],
+                                  address: snapshot.data?.docs[i]['address'],
+                                  netamount: snapshot.data?.docs[i]
+                                      ['netamount'],
+                                  imageUrl: snapshot.data?.docs[i]['imageURL'],
+                                )),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      print("error 2");
+                      return Center(child: Text(snapshot.error.toString()));
+                    } else {
+                      print("Error 3");
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  })
             ]),
           ),
           // List view of persons
