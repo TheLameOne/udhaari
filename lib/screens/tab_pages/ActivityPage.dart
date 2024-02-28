@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/AllActivity.dart';
+import 'package:udhaari/screens/UdhaarDetails.dart';
 import 'package:udhaari/utils/global.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -29,12 +30,21 @@ class _ActivityPageState extends State<ActivityPage> {
                 child: Column(
                   children: [
                     for (int i = 0; i < snapshot.data!.size; i++)
-                      AllActivity(
-                        name: snapshot.data?.docs[i]['personName'],
-                        amount: snapshot.data?.docs[i]['amount'],
-                        date: snapshot.data?.docs[i]['date'].toDate(),
-                        imageUrl: snapshot.data?.docs[i]['imageURL'],
-                        description: snapshot.data?.docs[i]['description'],
+                      InkWell(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                UdhaarDetails(id: snapshot.data!.docs[i].id),
+                          ),
+                        ),
+                        child: AllActivity(
+                          name: snapshot.data?.docs[i]['personName'],
+                          amount: snapshot.data?.docs[i]['amount'],
+                          date: snapshot.data?.docs[i]['date'].toDate(),
+                          imageUrl: snapshot.data?.docs[i]['imageURL'],
+                          description: snapshot.data?.docs[i]['description'],
+                        ),
                       )
                   ],
                 ),

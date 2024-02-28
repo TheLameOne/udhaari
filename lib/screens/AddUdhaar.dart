@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:searchfield/searchfield.dart';
 import 'package:udhaari/custom/CustomTextField.dart';
 import 'package:udhaari/utils/global.dart';
 
@@ -16,6 +17,26 @@ class AddUdhaar extends StatefulWidget {
 }
 
 class _AddUdhaarState extends State<AddUdhaar> {
+  @override
+  void initState() {
+    getSearchList();
+    super.initState();
+  }
+
+  List _searchList = [];
+
+  getSearchList() async {
+    var data = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(phoneNumber)
+        .collection('persons')
+        .get();
+
+    setState(() {
+      _searchList = data.docs;
+    });
+  }
+
   final nameFieldContoller = TextEditingController();
   final amountFieldContoller = TextEditingController();
   final descriptionFieldContoller = TextEditingController();
@@ -88,9 +109,50 @@ class _AddUdhaarState extends State<AddUdhaar> {
               child: Icon(Icons.check))
         ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           children: [
+            // Container(
+            //   height: size.height,
+            //   width: size.width,
+            //   child: ListView.builder(
+            //       itemCount: _searchList.length,
+            //       itemBuilder: (context, index) {
+            //         return ListTile(
+            //           title: Text(_searchList[index]['name']),
+            //         );
+            //       }),
+            // ),
+            Container(
+              height: 200,
+              width: size.width,
+              child: SearchField<String>(
+                suggestions: _searchList
+                    .map(
+                      (e) => SearchFieldListItem<String>(
+                        e,
+                        item: e,
+                        // Use child to show Custom Widgets in the suggestions
+                        // defaults to Text widget
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              // CircleAvatar(
+                              //   backgroundImage: NetworkImage(e),
+                              // ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(e),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
             CustomTextField(
               inputType: TextInputType.name,
               obscureText: false,
