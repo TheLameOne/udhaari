@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:searchfield/searchfield.dart';
@@ -10,7 +11,7 @@ import 'package:udhaari/custom/CustomTextField.dart';
 import 'package:udhaari/utils/global.dart';
 
 class AddUdhaar extends StatefulWidget {
-  const AddUdhaar({super.key});
+  List _searchList = [];
 
   @override
   State<AddUdhaar> createState() => _AddUdhaarState();
@@ -23,7 +24,7 @@ class _AddUdhaarState extends State<AddUdhaar> {
     super.initState();
   }
 
-  List _searchList = [];
+  List _list = [];
 
   getSearchList() async {
     var data = await FirebaseFirestore.instance
@@ -33,8 +34,12 @@ class _AddUdhaarState extends State<AddUdhaar> {
         .get();
 
     setState(() {
-      _searchList = data.docs;
+      widget._searchList = data.docs;
     });
+    for (int i = 0; i < widget._searchList.length; i++) {
+      _list.add(widget._searchList[i]['name']);
+    }
+    print(_list);
   }
 
   final nameFieldContoller = TextEditingController();
@@ -127,7 +132,7 @@ class _AddUdhaarState extends State<AddUdhaar> {
               height: 200,
               width: size.width,
               child: SearchField<String>(
-                suggestions: _searchList
+                suggestions: _list
                     .map(
                       (e) => SearchFieldListItem<String>(
                         e,
