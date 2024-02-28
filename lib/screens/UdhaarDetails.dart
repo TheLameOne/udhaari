@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udhaari/utils/global.dart';
 
 class UdhaarDetails extends StatefulWidget {
@@ -11,6 +13,8 @@ class UdhaarDetails extends StatefulWidget {
 }
 
 class _UdhaarDetailsState extends State<UdhaarDetails> {
+  late Reference imagepath;
+  XFile? filepath = null;
   final now = DateTime.now();
   double amount = 100;
   @override
@@ -34,8 +38,29 @@ class _UdhaarDetailsState extends State<UdhaarDetails> {
             ),
           ),
         ]),
-        appBar: AppBar(actions: const [
-          Icon(Icons.camera_alt_outlined),
+        appBar: AppBar(actions: [
+          InkWell(
+              onTap: () {}
+              // async {
+              //   ImagePicker imagePicker = ImagePicker();
+              //   XFile? file =
+              //       await imagePicker.pickImage(source: ImageSource.gallery);
+
+              //   if (file != null) {
+              //     String id = DateTime.now().millisecondsSinceEpoch.toString();
+              //     Reference referenceRoot = FirebaseStorage.instance.ref();
+              //     Reference referenceDirImages =
+              //         referenceRoot.child(phoneNumber.toString());
+              //     Reference referenceImageToUpload =
+              //         referenceDirImages.child(id);
+              //     imagepath = referenceImageToUpload;
+              //     filepath = file;
+              //   } else {
+              //     errorToast("Please Choose the File", context);
+              //   }
+              // }
+              ,
+              child: Icon(Icons.camera_alt_outlined)),
           Icon(Icons.delete),
           Icon(Icons.edit)
         ]),

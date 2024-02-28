@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:udhaari/custom/PersonListView.dart';
+import 'package:udhaari/screens/AddUdhaar.dart';
 import 'package:udhaari/utils/global.dart';
 
 class AllPersonPage extends StatelessWidget {
@@ -11,8 +12,23 @@ class AllPersonPage extends StatelessWidget {
       .snapshots();
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(actions: [Icon(Icons.tune)]),
+        appBar: AppBar(
+          actions: [Icon(Icons.tune)],
+        ),
+        floatingActionButton: SizedBox(
+          width: size.width * 0.4,
+          child: FloatingActionButton(
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddUdhaar())),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.cyan,
+            child: Row(
+              children: [Icon(Icons.receipt_rounded), Text("Add expense")],
+            ),
+          ),
+        ),
         body: StreamBuilder<QuerySnapshot>(
           stream: fireStore,
           builder: (context, snapshot) {
