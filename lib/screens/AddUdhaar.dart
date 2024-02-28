@@ -75,7 +75,7 @@ class _AddUdhaarState extends State<AddUdhaar> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.white38,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Add Udhaar"),
         actions: [
@@ -115,136 +115,168 @@ class _AddUdhaarState extends State<AddUdhaar> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Container(
-            //   height: size.height,
-            //   width: size.width,
-            //   child: ListView.builder(
-            //       itemCount: _searchList.length,
-            //       itemBuilder: (context, index) {
-            //         return ListTile(
-            //           title: Text(_searchList[index]['name']),
-            //         );
-            //       }),
-            // ),
-            Container(
-              height: 200,
-              width: size.width,
-              child: SearchField<String>(
-                suggestions: _list
-                    .map(
-                      (e) => SearchFieldListItem<String>(
-                        e,
-                        item: e,
-                        // Use child to show Custom Widgets in the suggestions
-                        // defaults to Text widget
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              // CircleAvatar(
-                              //   backgroundImage: NetworkImage(e),
-                              // ),
-                              SizedBox(
-                                width: 10,
+        child: Padding(
+          padding: EdgeInsets.only(top: 8, bottom: 8, left: 64, right: 64),
+          child: Column(
+            children: [
+              // Container(
+              //   height: size.height,
+              //   width: size.width,
+              //   child: ListView.builder(
+              //       itemCount: _searchList.length,
+              //       itemBuilder: (context, index) {
+              //         return ListTile(
+              //           title: Text(_searchList[index]['name']),
+              //         );
+              //       }),
+              // ),
+              Container(
+                // decoration: InputDecoration(
+                //   prefixIcon: Icon(prefixIcon),
+                //   isDense: true,
+                //   labelText: name,
+                //   counterText: "",
+                //   labelStyle: const TextStyle(color: Colors.grey),
+                //   border: const OutlineInputBorder(
+                //     borderSide: BorderSide(color: Colors.green),
+                //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                //   ),
+                //   focusedBorder: const OutlineInputBorder(
+                //     borderSide: BorderSide(color: Colors.green),
+                //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                //   ),
+                //   enabledBorder: const OutlineInputBorder(
+                //     borderSide: BorderSide(color: Colors.green),
+                //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                //   ),
+                // ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: SearchField<String>(
+                  suggestions: _list
+                      .map(
+                        (e) => SearchFieldListItem<String>(
+                          e,
+                          item: e,
+                          // Use child to show Custom Widgets in the suggestions
+                          // defaults to Text widget
+                          child: Container(
+                            height: 100,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    child: Icon(Icons.person),
+                                    width: 10,
+                                  ),
+                                  SizedBox(width: 16),
+                                  Text(
+                                    e,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
-                              Text(e),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-            CustomTextField(
-              inputType: TextInputType.name,
-              obscureText: false,
-              name: "Name",
-              controller: nameFieldContoller,
-              prefixIcon: Icons.person,
-              onChanged: (value) {
-                name = value!;
-              },
-            ),
-            // person search drop down list
-
-            CustomTextField(
-              inputType: TextInputType.number,
-              obscureText: false,
-              name: "Amount",
-              controller: amountFieldContoller,
-              prefixIcon: Icons.currency_rupee,
-              onChanged: (value) {
-                amount = value!;
-                print(amount.toString());
-              },
-            ),
-
-            // description
-
-            CustomTextField(
-              inputType: TextInputType.text,
-              obscureText: false,
-              name: "Description",
-              controller: descriptionFieldContoller,
-              prefixIcon: Icons.description,
-              onChanged: (value) {
-                description = value!;
-              },
-            ),
-            // amount to text
-
-            // red / green
-            InkWell(
-                onTap: () => _selectDate(context),
-                child: Icon(Icons.calendar_month)),
-            InkWell(
-              onTap: () async {
-                ImagePicker imagePicker = ImagePicker();
-                XFile? file =
-                    await imagePicker.pickImage(source: ImageSource.gallery);
-
-                if (file != null) {
-                  String id = DateTime.now().millisecondsSinceEpoch.toString();
-                  Reference referenceRoot = FirebaseStorage.instance.ref();
-                  Reference referenceDirImages =
-                      referenceRoot.child(phoneNumber.toString());
-                  Reference referenceImageToUpload =
-                      referenceDirImages.child(id);
-                  imagepath = referenceImageToUpload;
-                  filepath = file;
-                } else {
-                  errorToast("Please Choose the File", context);
-                }
-              },
-              child: Icon(Icons.camera),
-            ),
-
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.red),
-                    height: 50,
-                    width: 100,
-                    child: Text("Red"),
-                  ),
+                      )
+                      .toList(),
                 ),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.green),
-                    height: 50,
-                    width: 100,
-                    child: Text("Green"),
+              ),
+              // CustomTextField(
+              //   inputType: TextInputType.name,
+              //   obscureText: false,
+              //   name: "Name",
+              //   controller: nameFieldContoller,
+              //   prefixIcon: Icons.person,
+              //   onChanged: (value) {
+              //     name = value!;
+              //   },
+              // ),
+              // person search drop down list
+
+              CustomTextField(
+                inputType: TextInputType.number,
+                obscureText: false,
+                name: "Amount",
+                controller: amountFieldContoller,
+                prefixIcon: Icons.currency_rupee,
+                onChanged: (value) {
+                  amount = value!;
+                  print(amount.toString());
+                },
+              ),
+
+              // description
+
+              CustomTextField(
+                inputType: TextInputType.text,
+                obscureText: false,
+                name: "Description",
+                controller: descriptionFieldContoller,
+                prefixIcon: Icons.description,
+                onChanged: (value) {
+                  description = value!;
+                },
+              ),
+              // amount to text
+
+              // red / green
+              InkWell(
+                  onTap: () => _selectDate(context),
+                  child: Icon(Icons.calendar_month)),
+              InkWell(
+                onTap: () async {
+                  ImagePicker imagePicker = ImagePicker();
+                  XFile? file =
+                      await imagePicker.pickImage(source: ImageSource.gallery);
+
+                  if (file != null) {
+                    String id =
+                        DateTime.now().millisecondsSinceEpoch.toString();
+                    Reference referenceRoot = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages =
+                        referenceRoot.child(phoneNumber.toString());
+                    Reference referenceImageToUpload =
+                        referenceDirImages.child(id);
+                    imagepath = referenceImageToUpload;
+                    filepath = file;
+                  } else {
+                    errorToast("Please Choose the File", context);
+                  }
+                },
+                child: Icon(Icons.camera),
+              ),
+
+              Row(
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.red),
+                      height: 50,
+                      width: 100,
+                      child: Text("Red"),
+                    ),
                   ),
-                )
-              ],
-            )
-          ],
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.green),
+                      height: 50,
+                      width: 100,
+                      child: Text("Green"),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
