@@ -114,13 +114,22 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w600,
                                               fontSize: 14),
                                         ),
-                                  Text("  ₹" + overall_own.toStringAsFixed(0),
-                                      style: TextStyle(
-                                          color: overall_own > 0
-                                              ? Colors.green
-                                              : Colors.red,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
+                                  Row(
+                                    children: [
+                                      Text(" ₹",
+                                          style: TextStyle(
+                                            fontFamily: "Roboto",
+                                            fontSize: 18,
+                                          )),
+                                      Text(overall_own.toStringAsFixed(0),
+                                          style: TextStyle(
+                                              color: overall_own > 0
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
                                 ]);
                               } else if (snapshot.hasError) {
                                 print("error 2");

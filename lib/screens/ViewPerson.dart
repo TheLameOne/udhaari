@@ -43,7 +43,6 @@ class _ViewPersonState extends State<ViewPerson> {
         controller: _scrollViewController,
         slivers: [
           SliverAppBar(
-            // title: Text("Harsh Verma"),
             pinned: true,
             floating: true,
             expandedHeight: size.height * 0.1,
