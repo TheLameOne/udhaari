@@ -29,20 +29,35 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           actions: [
-            InkWell(
-                onTap: () {
-                  // Search Function
-                },
-                child: Icon(Icons.search)),
-            InkWell(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddPerson(),
-                    )),
-                child: Icon(Icons.person_add_alt_1))
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                  onTap: () {
+                    // Search Function
+                  },
+                  child: Icon(
+                    Icons.search,
+                    size: 28,
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8, right: 8),
+              child: InkWell(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddPerson(),
+                      )),
+                  child: Icon(
+                    Icons.person_add_alt_1,
+                    size: 28,
+                  )),
+            )
           ],
-          title: Text("Udhaari"),
+          title: Text(
+            "Udhaari",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
         floatingActionButton: SizedBox(
           width: size.width * 0.4,
@@ -51,38 +66,114 @@ class _HomePageState extends State<HomePage> {
                 context, MaterialPageRoute(builder: (context) => AddUdhaar())),
             foregroundColor: Colors.white,
             backgroundColor: Colors.cyan,
-            child: Row(
-              children: [Icon(Icons.receipt_rounded), Text("Add expense")],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Icon(Icons.receipt_rounded),
+                  SizedBox(width: 8),
+                  Text(
+                    "Add expense",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
             ),
           ),
         ),
         body: SingleChildScrollView(
-          child: Container(
-            child: Column(children: [
-              // Overall Own
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                InkWell(
-                  onTap: () {
-                    // Navigate to Stats Screen
-                  },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: Column(children: [
+                // Overall Own
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // Navigate to Stats Screen
+                        },
+                        child: StreamBuilder<QuerySnapshot>(
+                            stream: overallOwnStream,
+                            builder: (BuildContext context, snapshot) {
+                              if (snapshot.hasData) {
+                                var overall_own =
+                                    snapshot.data?.docs[0]['overallOwn'];
+                                return Row(children: [
+                                  (overall_own > 0)
+                                      ? Text(
+                                          "Overall, you are owned",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14),
+                                        )
+                                      : Text(
+                                          "Overall,you owe",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14),
+                                        ),
+                                  Text("  ₹" + overall_own.toStringAsFixed(0),
+                                      style: TextStyle(
+                                          color: overall_own > 0
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold)),
+                                ]);
+                              } else if (snapshot.hasError) {
+                                print("error 2");
+                                return Center(
+                                    child: Text(snapshot.error.toString()));
+                              } else {
+                                print("Error 3");
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            }),
+                      ),
+                      Icon(
+                        Icons.tune_rounded,
+                        size: 28,
+                      ),
+                    ]),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0, left: 4, right: 4),
                   child: StreamBuilder<QuerySnapshot>(
-                      stream: overallOwnStream,
+                      stream: personsStream,
                       builder: (BuildContext context, snapshot) {
                         if (snapshot.hasData) {
-                          var overall_own =
-                              snapshot.data?.docs[0]['overallOwn'];
-                          return Row(children: [
-                            (overall_own > 0)
-                                ? Text("Overall, you are owned")
-                                : Text("Overall,you owe"),
-                            Text("₹" + overall_own.toStringAsFixed(0),
-                                style: TextStyle(
-                                    color: overall_own > 0
-                                        ? Colors.green
-                                        : Colors.red,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold)),
-                          ]);
+                          return Column(
+                            children: [
+                              for (int i = 0; i < snapshot.data!.size; i++)
+                                InkWell(
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ViewPerson(
+                                              name: snapshot.data?.docs[i]
+                                                  ['name'],
+                                              address: snapshot.data?.docs[i]
+                                                  ['address'],
+                                              netamount: snapshot.data?.docs[i]
+                                                  ['netamount'],
+                                              imageUrl: snapshot.data?.docs[i]
+                                                  ['imageURL']),
+                                        )),
+                                    child: PersonListView(
+                                      name: snapshot.data?.docs[i]['name'],
+                                      address: snapshot.data?.docs[i]
+                                          ['address'],
+                                      netamount: snapshot.data?.docs[i]
+                                          ['netamount'],
+                                      imageUrl: snapshot.data?.docs[i]
+                                          ['imageURL'],
+                                    )),
+                            ],
+                          );
                         } else if (snapshot.hasError) {
                           print("error 2");
                           return Center(child: Text(snapshot.error.toString()));
@@ -93,49 +184,9 @@ class _HomePageState extends State<HomePage> {
                           );
                         }
                       }),
-                ),
-                Icon(Icons.tune_rounded),
+                )
               ]),
-              StreamBuilder<QuerySnapshot>(
-                  stream: personsStream,
-                  builder: (BuildContext context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Column(
-                        children: [
-                          for (int i = 0; i < snapshot.data!.size; i++)
-                            InkWell(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ViewPerson(
-                                          name: snapshot.data?.docs[i]['name'],
-                                          address: snapshot.data?.docs[i]
-                                              ['address'],
-                                          netamount: snapshot.data?.docs[i]
-                                              ['netamount'],
-                                          imageUrl: snapshot.data?.docs[i]
-                                              ['imageURL']),
-                                    )),
-                                child: PersonListView(
-                                  name: snapshot.data?.docs[i]['name'],
-                                  address: snapshot.data?.docs[i]['address'],
-                                  netamount: snapshot.data?.docs[i]
-                                      ['netamount'],
-                                  imageUrl: snapshot.data?.docs[i]['imageURL'],
-                                )),
-                        ],
-                      );
-                    } else if (snapshot.hasError) {
-                      print("error 2");
-                      return Center(child: Text(snapshot.error.toString()));
-                    } else {
-                      print("Error 3");
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  })
-            ]),
+            ),
           ),
           // List view of persons
 

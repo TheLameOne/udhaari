@@ -24,8 +24,18 @@ class AllPersonPage extends StatelessWidget {
                 context, MaterialPageRoute(builder: (context) => AddUdhaar())),
             foregroundColor: Colors.white,
             backgroundColor: Colors.cyan,
-            child: Row(
-              children: [Icon(Icons.receipt_rounded), Text("Add expense")],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Icon(Icons.receipt_rounded),
+                  SizedBox(width: 8),
+                  Text(
+                    "Add expense",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
             ),
           ),
         ),
