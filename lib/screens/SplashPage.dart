@@ -18,11 +18,11 @@ class _SplashPageState extends State<SplashPage> {
       case 0:
         return HomePage();
       case 1:
-        return AllPersonPage();
+        return ActivityPage();
       case 2:
         return ActivityPage();
-      case 3:
-        return HomePage();
+      // case 3:
+      //   return HomePage();
       // case 4:
       //   return ProfileScreen();
       default:
@@ -37,9 +37,9 @@ class _SplashPageState extends State<SplashPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           _getBottomBarItem(index: 0, icontab: Icons.home),
-          _getBottomBarItem(index: 1, icontab: Icons.groups_3_rounded),
-          _getBottomBarItem(index: 2, icontab: Icons.bar_chart_rounded),
-          _getBottomBarItem(index: 3, icontab: Icons.person),
+          // _getBottomBarItem(index: 1, icontab: Icons.groups_3_rounded),
+          _getBottomBarItem(index: 1, icontab: Icons.bar_chart_rounded),
+          _getBottomBarItem(index: 2, icontab: Icons.person),
         ],
       ),
     );
