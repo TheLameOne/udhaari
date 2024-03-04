@@ -23,7 +23,11 @@ class _ActivityPageState extends State<ActivityPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(title: Text("Activity")),
+        appBar: AppBar(
+            title: Text(
+          "Activity",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
         floatingActionButton: SizedBox(
           width: size.width * 0.4,
           child: FloatingActionButton(
@@ -51,26 +55,29 @@ class _ActivityPageState extends State<ActivityPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for (int i = 0; i < snapshot.data!.size; i++)
-                      InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                UdhaarDetails(id: snapshot.data!.docs[i].id),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < snapshot.data!.size; i++)
+                        InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  UdhaarDetails(id: snapshot.data!.docs[i].id),
+                            ),
                           ),
-                        ),
-                        child: AllActivity(
-                          name: snapshot.data?.docs[i]['personName'],
-                          amount: snapshot.data?.docs[i]['amount'],
-                          date: snapshot.data?.docs[i]['date'].toDate(),
-                          imageUrl: snapshot.data?.docs[i]['imageURL'],
-                          description: snapshot.data?.docs[i]['description'],
-                        ),
-                      )
-                  ],
+                          child: AllActivity(
+                            name: snapshot.data?.docs[i]['personName'],
+                            amount: snapshot.data?.docs[i]['amount'],
+                            date: snapshot.data?.docs[i]['date'].toDate(),
+                            imageUrl: snapshot.data?.docs[i]['imageURL'],
+                            description: snapshot.data?.docs[i]['description'],
+                          ),
+                        )
+                    ],
+                  ),
                 ),
               );
             } else if (snapshot.hasError) {
