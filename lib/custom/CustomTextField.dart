@@ -23,7 +23,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(top: 4, left: 4, right: 4, bottom: 15),
       child: TextField(
         onChanged: onChanged,
         enabled: true,

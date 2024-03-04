@@ -30,6 +30,7 @@ class _AddPersonState extends State<AddPerson> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -57,7 +58,7 @@ class _AddPersonState extends State<AddPerson> {
                     // .where('phoneNumber', isEqualTo: phoneNumber)
                     .add({
                       //Data added in the form of a dictionary into the document.
-                      'name': name,
+                      'name': name.toTitleCase(),
                       'address': address,
                       'netamount': 0,
                       'imageURL': imageURL,
@@ -67,68 +68,87 @@ class _AddPersonState extends State<AddPerson> {
                 successToast("Person Added Successfully", context);
                 Navigator.pop(context);
               },
-              child: Icon(Icons.check))
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.check,
+                  size: 30,
+                  weight: 10,
+                ),
+              ))
         ],
-        title: Text("Add Person"),
+        title: Text(
+          "Add Person",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            // Name*
-            CustomTextField(
-              inputType: TextInputType.name,
-              obscureText: false,
-              name: "Name",
-              controller: nameController,
-              prefixIcon: Icons.person,
-              onChanged: (value) {
-                name = value!;
-              },
-            ),
-            // Details
-            CustomTextField(
-              inputType: TextInputType.streetAddress,
-              obscureText: false,
-              name: "Address",
-              controller: addressController,
-              prefixIcon: Icons.home,
-              onChanged: (value) {
-                address = value!;
-              },
-            ),
-
-            InkWell(
-                onTap: () async {
-                  ImagePicker imagePicker = ImagePicker();
-                  XFile? file =
-                      await imagePicker.pickImage(source: ImageSource.gallery);
-
-                  if (file != null) {
-                    String id =
-                        DateTime.now().millisecondsSinceEpoch.toString();
-                    Reference referenceRoot = FirebaseStorage.instance.ref();
-                    Reference referenceDirImages =
-                        referenceRoot.child(phoneNumber.toString());
-                    Reference referenceImageToUpload =
-                        referenceDirImages.child(id);
-                    imagepath = referenceImageToUpload;
-                    filepath = file;
-                  } else {
-                    errorToast("Please Choose the File", context);
-                  }
+      body: Padding(
+        padding: const EdgeInsets.only(top: 12, bottom: 8, left: 8, right: 8),
+        child: Container(
+          child: Column(
+            children: [
+              // Name*
+              CustomTextField(
+                inputType: TextInputType.name,
+                obscureText: false,
+                name: "Name",
+                controller: nameController,
+                prefixIcon: Icons.person,
+                onChanged: (value) {
+                  name = value!;
                 },
-                child: Icon(Icons.camera_alt_rounded)),
-            CustomTextField(
-              inputType: TextInputType.text,
-              obscureText: false,
-              name: "Details",
-              controller: detailsController,
-              prefixIcon: Icons.description,
-              onChanged: (value) {
-                details = value!;
-              },
-            ),
-          ],
+              ),
+              // Details
+              CustomTextField(
+                inputType: TextInputType.streetAddress,
+                obscureText: false,
+                name: "Address",
+                controller: addressController,
+                prefixIcon: Icons.home,
+                onChanged: (value) {
+                  address = value!;
+                },
+              ),
+
+              CustomTextField(
+                inputType: TextInputType.text,
+                obscureText: false,
+                name: "Details",
+                controller: detailsController,
+                prefixIcon: Icons.description,
+                onChanged: (value) {
+                  details = value!;
+                },
+              ),
+              InkWell(
+                  onTap: () async {
+                    ImagePicker imagePicker = ImagePicker();
+                    XFile? file = await imagePicker.pickImage(
+                        source: ImageSource.gallery);
+
+                    if (file != null) {
+                      String id =
+                          DateTime.now().millisecondsSinceEpoch.toString();
+                      Reference referenceRoot = FirebaseStorage.instance.ref();
+                      Reference referenceDirImages =
+                          referenceRoot.child(phoneNumber.toString());
+                      Reference referenceImageToUpload =
+                          referenceDirImages.child(id);
+                      imagepath = referenceImageToUpload;
+                      filepath = file;
+                    } else {
+                      errorToast("Please Choose the File", context);
+                    }
+                  },
+                  child: Container(
+                      height: size.height * 0.15,
+                      width: size.width * 0.30,
+                      decoration: BoxDecoration(
+                          color: Colors.black26,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Icon(Icons.camera_alt_rounded, size: 60))),
+            ],
+          ),
         ),
       ),
     );
