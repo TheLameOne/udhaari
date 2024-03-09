@@ -75,8 +75,35 @@ class _ViewPersonState extends State<ViewPerson> {
                 Text(widget.name),
                 Row(
                   children: [
-                    Text("You owe this"),
-                    Text(widget.netamount.toString())
+                    (widget.netamount > 0)
+                        ? Row(
+                            children: [
+                              Text(
+                                "Owes You",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "₹${widget.netamount}",
+                                style: TextStyle(
+                                    color: Colors.green, fontFamily: 'Roboto'),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Text(
+                                "You Owe",
+                                style: TextStyle(color: Colors.orange),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "₹${widget.netamount.abs()}",
+                                style: TextStyle(
+                                    color: Colors.orange, fontFamily: 'Roboto'),
+                              ),
+                            ],
+                          ),
                   ],
                 ),
                 // List of Activity

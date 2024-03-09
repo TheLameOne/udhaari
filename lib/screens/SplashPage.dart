@@ -3,6 +3,7 @@ import 'package:udhaari/screens/UdhaarDetails.dart';
 import 'package:udhaari/screens/tab_pages/ActivityPage.dart';
 import 'package:udhaari/screens/tab_pages/AllPersons.dart';
 import 'package:udhaari/screens/tab_pages/HomePage.dart';
+import 'package:udhaari/screens/tab_pages/ProfilePage.dart';
 import 'package:udhaari/utils/global.dart';
 
 class SplashPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
       case 1:
         return ActivityPage();
       case 2:
-        return ActivityPage();
+        return ProfilePage();
       // case 3:
       //   return HomePage();
       // case 4:

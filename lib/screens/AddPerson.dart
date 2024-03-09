@@ -84,7 +84,7 @@ class _AddPersonState extends State<AddPerson> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 12, bottom: 8, left: 8, right: 8),
-        child: Container(
+        child: SingleChildScrollView(
           child: Column(
             children: [
               // Name*
