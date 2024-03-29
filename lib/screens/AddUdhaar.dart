@@ -111,7 +111,10 @@ class _AddUdhaarState extends State<AddUdhaar> {
                 successToast("Added Successfully", context);
                 Navigator.pop(context);
               },
-              child: Icon(Icons.check))
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(Icons.check),
+              ))
         ],
       ),
       body: SingleChildScrollView(
@@ -131,32 +134,16 @@ class _AddUdhaarState extends State<AddUdhaar> {
               //       }),
               // ),
               Container(
-                // decoration: InputDecoration(
-                //   prefixIcon: Icon(prefixIcon),
-                //   isDense: true,
-                //   labelText: name,
-                //   counterText: "",
-                //   labelStyle: const TextStyle(color: Colors.grey),
-                //   border: const OutlineInputBorder(
-                //     borderSide: BorderSide(color: Colors.green),
-                //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                //   ),
-                //   focusedBorder: const OutlineInputBorder(
-                //     borderSide: BorderSide(color: Colors.green),
-                //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                //   ),
-                //   enabledBorder: const OutlineInputBorder(
-                //     borderSide: BorderSide(color: Colors.green),
-                //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                //   ),
-                // ),
-
+                margin: const EdgeInsets.only(
+                    top: 4, left: 4, right: 4, bottom: 15),
                 child: SearchField<String>(
                   controller: nameFieldContoller,
                   onSubmit: (p0) {
                     name = p0;
                     print(name.toString());
                   },
+                  maxSuggestionsInViewPort: 3,
+                  itemHeight: 64,
                   searchInputDecoration: InputDecoration(
                     prefixIcon: Icon(Icons.person),
                     labelText: (name != null) ? "Name" : " ",
@@ -190,14 +177,18 @@ class _AddUdhaarState extends State<AddUdhaar> {
                               child: Row(
                                 children: [
                                   Container(
-                                    child: Icon(Icons.person),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.black54,
+                                    ),
                                     width: 10,
                                   ),
-                                  SizedBox(width: 16),
+                                  SizedBox(width: 28),
                                   Text(
-                                    e,
+                                    e.toString().toCapitalized(),
                                     style: TextStyle(
                                         fontSize: 16,
+                                        color: Colors.black54,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ],
@@ -248,50 +239,92 @@ class _AddUdhaarState extends State<AddUdhaar> {
               // amount to text
 
               // red / green
-              InkWell(
-                  onTap: () => _selectDate(context),
-                  child: Icon(Icons.calendar_month)),
-              InkWell(
-                onTap: () async {
-                  ImagePicker imagePicker = ImagePicker();
-                  XFile? file =
-                      await imagePicker.pickImage(source: ImageSource.gallery);
-
-                  if (file != null) {
-                    String id =
-                        DateTime.now().millisecondsSinceEpoch.toString();
-                    Reference referenceRoot = FirebaseStorage.instance.ref();
-                    Reference referenceDirImages =
-                        referenceRoot.child(phoneNumber.toString());
-                    Reference referenceImageToUpload =
-                        referenceDirImages.child(id);
-                    imagepath = referenceImageToUpload;
-                    filepath = file;
-                  } else {
-                    errorToast("Please Choose the File", context);
-                  }
-                },
-                child: Icon(Icons.camera),
-              ),
-
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                      onTap: () => _selectDate(context),
+                      child: Container(
+                          height: size.height * 0.15,
+                          width: size.width * 0.3,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black54),
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Icon(
+                            Icons.calendar_month,
+                            size: 64,
+                            color: Colors.black54,
+                          ))),
+                  SizedBox(width: 16),
+                  InkWell(
+                    onTap: () async {
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? file = await imagePicker.pickImage(
+                          source: ImageSource.gallery);
+
+                      if (file != null) {
+                        String id =
+                            DateTime.now().millisecondsSinceEpoch.toString();
+                        Reference referenceRoot =
+                            FirebaseStorage.instance.ref();
+                        Reference referenceDirImages =
+                            referenceRoot.child(phoneNumber.toString());
+                        Reference referenceImageToUpload =
+                            referenceDirImages.child(id);
+                        imagepath = referenceImageToUpload;
+                        filepath = file;
+                      } else {
+                        errorToast("Please Choose the File", context);
+                      }
+                    },
+                    child: Container(
+                      height: size.height * 0.15,
+                      width: size.width * 0.3,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black54),
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Icon(
+                        Icons.camera,
+                        size: 64,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
                     onTap: () {},
                     child: Container(
-                      decoration: BoxDecoration(color: Colors.red),
-                      height: 50,
-                      width: 100,
-                      child: Text("Red"),
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(15)),
+                      height: size.height * 0.12,
+                      width: size.width * 0.3,
+                      child: Center(
+                          child: Text(
+                        "Red",
+                        style: TextStyle(color: Colors.black87),
+                      )),
                     ),
                   ),
+                  SizedBox(width: 16),
                   InkWell(
                     onTap: () {},
                     child: Container(
-                      decoration: BoxDecoration(color: Colors.green),
-                      height: 50,
-                      width: 100,
-                      child: Text("Green"),
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(15)),
+                      height: size.height * 0.12,
+                      width: size.width * 0.3,
+                      child: Center(
+                          child: Text(
+                        "Green",
+                        style: TextStyle(color: Colors.black87),
+                      )),
                     ),
                   )
                 ],
