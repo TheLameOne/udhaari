@@ -150,10 +150,31 @@ class _AddUdhaarState extends State<AddUdhaar> {
                 //     borderRadius: BorderRadius.all(Radius.circular(10)),
                 //   ),
                 // ),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.green),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+
                 child: SearchField<String>(
+                  controller: nameFieldContoller,
+                  onSubmit: (p0) {
+                    name = p0;
+                    print(name.toString());
+                  },
+                  searchInputDecoration: InputDecoration(
+                    prefixIcon: Icon(Icons.person),
+                    labelText: (name != null) ? "Name" : " ",
+                    counterText: "",
+                    labelStyle: const TextStyle(color: Colors.grey),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
                   suggestions: _list
                       .map(
                         (e) => SearchFieldListItem<String>(
